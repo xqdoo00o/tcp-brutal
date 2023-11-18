@@ -10,8 +10,13 @@
  and your kernel version is greater than 5.8.
 #endif
 
-#define INIT_PACING_RATE 125000 // 1 Mbps
-#define INIT_CWND_GAIN 20
+static int init_pacing_rate = 125000; // 1 Mbps
+static int init_cwnd_gain = 20;
+
+module_param(init_pacing_rate, int, 0644);
+MODULE_PARM_DESC(init_pacing_rate, "pacing rate");
+module_param(init_cwnd_gain, int, 0644);
+MODULE_PARM_DESC(init_cwnd_gain, "cwnd gain");
 
 #define MIN_PACING_RATE 62500 // 500 Kbps
 #define MIN_CWND_GAIN 5
@@ -152,8 +157,8 @@ static void brutal_init(struct sock *sk)
 
     tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
 
-    brutal->rate = INIT_PACING_RATE;
-    brutal->cwnd_gain = INIT_CWND_GAIN;
+    brutal->rate = init_pacing_rate;
+    brutal->cwnd_gain = init_cwnd_gain;
 
     memset(brutal->slots, 0, sizeof(brutal->slots));
 
